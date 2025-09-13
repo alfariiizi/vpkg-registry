@@ -1,0 +1,82 @@
+# {{ .Title }}
+
+{{ .Description }}
+
+## Installation
+
+This package was installed via Vandor vpkg:
+```bash
+vandor vpkg add {{ .VpkgName }}
+```
+
+## Usage
+
+### Import the package
+
+```go
+import rediscache "{{ .Module }}/{{ .PackagePath }}"
+```
+
+### Wire into Fx application
+
+```go
+package main
+
+import (
+	"go.uber.org/fx"
+	rediscache "{{ .Module }}/{{ .PackagePath }}"
+)
+
+func main() {
+	app := fx.New(
+		rediscache.Module, // Add Redis cache module
+		// ... other modules
+	)
+	app.Run()
+}
+```
+
+### Manual instantiation
+
+```go
+cfg := rediscache.Config{
+	Addr:     "127.0.0.1:6379",
+	Password: "",
+	DB:       0,
+}
+cache := rediscache.NewRedisCache(cfg)
+defer cache.Close()
+
+// Use the cache
+ctx := context.Background()
+err := cache.Set(ctx, "key", "value", time.Hour)
+if err != nil {
+	log.Fatal(err)
+}
+
+value, err := cache.Get(ctx, "key")
+if err != nil {
+	log.Fatal(err)
+}
+fmt.Println("Value:", value)
+```
+
+## Configuration
+
+The Redis cache can be configured via environment variables or YAML:
+
+- `REDIS_ADDR` - Redis server address (default: 127.0.0.1:6379)
+- `REDIS_PASSWORD` - Redis password (default: empty)
+- `REDIS_DB` - Redis database number (default: 0)
+
+## Dependencies
+
+This package requires:
+- `github.com/redis/go-redis/v9`
+- `go.uber.org/fx`
+
+Add them to your project:
+```bash
+go get github.com/redis/go-redis/v9
+go get go.uber.org/fx
+```

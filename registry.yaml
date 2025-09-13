@@ -1,0 +1,47 @@
+# Vandor Package Registry
+# Single source of truth for all available packages
+version: "1.0"
+registry_url: "https://raw.githubusercontent.com/alfariiizi/vpkg-registry/main/registry.yaml"
+
+packages:
+  - name: "vandor/redis-cache"
+    title: "Redis Cache"
+    description: "Simple Redis adapter using go-redis/v9 with Fx integration"
+    type: "fx-module"
+    version: "v0.1.0"
+    license: "MIT"
+    author: "Vandor Team"
+    repository: "https://github.com/alfariiizi/vpkg-registry/tree/main/packages/vandor/redis-cache"
+
+  - name: "vandor/audit-logger"
+    title: "Audit Logger"
+    description: "Structured audit logging with context tracking"
+    type: "fx-module"
+    version: "v0.1.0"
+    license: "MIT"
+    author: "Vandor Team"
+    repository: "https://github.com/alfariiizi/vpkg-registry/tree/main/packages/vandor/audit-logger"
+
+  - name: "acme/migrate-db"
+    title: "Database Migration Tool"
+    description: "CLI tool for running database migrations"
+    type: "cli-command"
+    version: "v0.1.0"
+    license: "MIT"
+    author: "ACME Corp"
+    repository: "https://github.com/alfariiizi/vpkg-registry/tree/main/packages/acme/migrate-db"
+
+tags:
+  - name: "full-backend"
+    description: "Compatible with full backend architecture"
+  - name: "eda"
+    description: "Compatible with event-driven architecture"
+  - name: "minimal"
+    description: "Compatible with minimal architecture"
+  - name: "cache"
+    description: "Caching related functionality"
+  - name: "database"
+    description: "Database related functionality"
+  - name: "logging"
+    description: "Logging and audit functionality"
+

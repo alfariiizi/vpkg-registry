@@ -1,0 +1,69 @@
+package {{ .Package }}
+
+import (
+	"context"
+	"time"
+
+	"github.com/redis/go-redis/v9"
+	"go.uber.org/fx"
+)
+
+// RedisCache provides Redis caching functionality
+type RedisCache struct {
+	client *redis.Client
+}
+
+// Config holds Redis configuration
+type Config struct {
+	Addr     string `yaml:"addr" env:"REDIS_ADDR" default:"127.0.0.1:6379"`
+	Password string `yaml:"password" env:"REDIS_PASSWORD"`
+	DB       int    `yaml:"db" env:"REDIS_DB" default:"0"`
+}
+
+// NewRedisCache creates a new Redis cache instance
+func NewRedisCache(cfg Config) *RedisCache {
+	client := redis.NewClient(&redis.Options{
+		Addr:     cfg.Addr,
+		Password: cfg.Password,
+		DB:       cfg.DB,
+	})
+	return &RedisCache{client: client}
+}
+
+// Set stores a key-value pair with optional TTL
+func (r *RedisCache) Set(ctx context.Context, key string, value interface{}, ttl time.Duration) error {
+	return r.client.Set(ctx, key, value, ttl).Err()
+}
+
+// Get retrieves a value by key
+func (r *RedisCache) Get(ctx context.Context, key string) (string, error) {
+	return r.client.Get(ctx, key).Result()
+}
+
+// Del deletes one or more keys
+func (r *RedisCache) Del(ctx context.Context, keys ...string) error {
+	return r.client.Del(ctx, keys...).Err()
+}
+
+// Exists checks if key exists
+func (r *RedisCache) Exists(ctx context.Context, key string) (bool, error) {
+	count, err := r.client.Exists(ctx, key).Result()
+	return count > 0, err
+}
+
+// Close closes the Redis connection
+func (r *RedisCache) Close() error {
+	return r.client.Close()
+}
+
+// Module provides Fx module for dependency injection
+var Module = fx.Module("redis-cache",
+	fx.Provide(NewRedisCache),
+	fx.Invoke(func(lifecycle fx.Lifecycle, cache *RedisCache) {
+		lifecycle.Append(fx.Hook{
+			OnStop: func(ctx context.Context) error {
+				return cache.Close()
+			},
+		})
+	}),
+)

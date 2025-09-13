@@ -1,0 +1,103 @@
+# {{ .Title }}
+
+{{ .Description }}
+
+## Installation
+
+This package was installed via Vandor vpkg:
+```bash
+vandor vpkg add {{ .VpkgName }}
+```
+
+## Usage
+
+### Run as CLI command (exec mode)
+
+```bash
+# Apply pending migrations
+vandor vpkg exec {{ .VpkgName }} up
+
+# Rollback migrations  
+vandor vpkg exec {{ .VpkgName }} down
+
+# Check migration status
+vandor vpkg exec {{ .VpkgName }} status
+```
+
+### Embed in your application
+
+Import the package:
+```go
+import migratedb "{{ .Module }}/{{ .PackagePath }}"
+```
+
+Use in your application:
+```go
+package main
+
+import (
+	"context"
+	"log"
+	
+	migratedb "{{ .Module }}/{{ .PackagePath }}"
+)
+
+func main() {
+	migrator := migratedb.NewMigrator()
+	defer migrator.Close()
+	
+	if err := migrator.Up(context.Background()); err != nil {
+		log.Fatalf("Migration failed: %v", err)
+	}
+	
+	log.Println("Migrations applied successfully")
+}
+```
+
+## Configuration
+
+Configure the migrator via environment variables:
+
+- `DATABASE_URL` - Database connection string
+- `MIGRATIONS_PATH` - Path to migrations directory (default: database/migrations)
+
+## Customization
+
+This is a template package. You need to customize:
+
+1. **Database Connection**: Implement database connection logic in `NewMigrator()`
+2. **Migrations Directory**: Set up your migrations directory structure
+3. **Atlas Integration**: Configure Atlas migration executor
+4. **Error Handling**: Add proper error handling and logging
+
+## Dependencies
+
+This package requires:
+- `ariga.io/atlas/sql/migrate`
+- `github.com/spf13/cobra`
+
+Add them to your project:
+```bash
+go get ariga.io/atlas/sql/migrate
+go get github.com/spf13/cobra
+```
+
+## Example Implementation
+
+```go
+func NewMigrator() *Migrator {
+	// Connect to database
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	// Load migrations directory
+	dir, err := migrate.NewLocalDir("database/migrations")
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	return &Migrator{db: db, dir: dir}
+}
+```

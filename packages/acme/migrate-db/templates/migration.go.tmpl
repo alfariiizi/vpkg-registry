@@ -1,0 +1,73 @@
+package {{ .Package }}
+
+import (
+	"context"
+	"database/sql"
+	"fmt"
+
+	"ariga.io/atlas/sql/migrate"
+)
+
+// Migrator handles database migrations
+type Migrator struct {
+	db  *sql.DB
+	dir *migrate.LocalDir
+}
+
+// Config holds migration configuration
+type Config struct {
+	DatabaseURL    string `yaml:"database_url" env:"DATABASE_URL"`
+	MigrationsPath string `yaml:"migrations_path" env:"MIGRATIONS_PATH" default:"database/migrations"`
+}
+
+// NewMigrator creates a new database migrator
+func NewMigrator() *Migrator {
+	// TODO: Initialize database connection and migrations directory
+	// This is a template - implement according to your database setup
+	return &Migrator{
+		// db:  connectToDatabase(),
+		// dir: loadMigrationsDir(),
+	}
+}
+
+// Up applies all pending migrations
+func (m *Migrator) Up(ctx context.Context) error {
+	if m.db == nil {
+		return fmt.Errorf("database connection not initialized")
+	}
+	
+	// TODO: Implement migration up logic
+	// Example:
+	// executor := migrate.NewExecutor(m.db.DB, m.dir, migrate.NewNopRevisionReadWriter())
+	// return executor.Execute(ctx, migrate.ExecOptions{})
+	
+	return fmt.Errorf("migration up not implemented - customize this template")
+}
+
+// Down rollback migrations
+func (m *Migrator) Down(ctx context.Context) error {
+	if m.db == nil {
+		return fmt.Errorf("database connection not initialized")
+	}
+	
+	// TODO: Implement migration down logic
+	return fmt.Errorf("migration down not implemented - customize this template")
+}
+
+// Status returns the current migration status
+func (m *Migrator) Status(ctx context.Context) (string, error) {
+	if m.db == nil {
+		return "", fmt.Errorf("database connection not initialized")
+	}
+	
+	// TODO: Implement migration status logic
+	return "Migration status not implemented - customize this template", nil
+}
+
+// Close closes the database connection
+func (m *Migrator) Close() error {
+	if m.db != nil {
+		return m.db.Close()
+	}
+	return nil
+}
