@@ -1,35 +1,31 @@
 # Vandor Package Registry
-# Single source of truth for all available packages
-version: "1.0"
+# Registry of VPkg repositories - metadata is fetched from each repo's meta.yaml
+version: "3.0"
 registry_url: "https://raw.githubusercontent.com/alfariiizi/vpkg-registry/main/registry.yaml"
 
-packages:
-  - name: "vandor/redis-cache"
-    title: "Redis Cache"
-    description: "Simple Redis adapter using go-redis/v9 with Fx integration"
-    type: "fx-module"
-    version: "v0.1.0"
-    license: "MIT"
+# Repository entries - the CLI will fetch meta.yaml from each repository
+# This eliminates duplication and allows repositories to manage their own metadata
+repositories:
+  # Official Vandor packages repository
+  - name: "vpkg-vandor-official"
+    repository: "https://github.com/alfariiizi/vpkg-vandor-official"
+    meta_url: "https://raw.githubusercontent.com/alfariiizi/vpkg-vandor-official/main/meta.yaml"
     author: "Vandor Team"
-    repository: "https://github.com/alfariiizi/vpkg-registry/tree/main/packages/vandor/redis-cache"
+    verified: true
 
-  - name: "vandor/audit-logger"
-    title: "Audit Logger"
-    description: "Structured audit logging with context tracking"
-    type: "fx-module"
-    version: "v0.1.0"
-    license: "MIT"
-    author: "Vandor Team"
-    repository: "https://github.com/alfariiizi/vpkg-registry/tree/main/packages/vandor/audit-logger"
-
-  - name: "acme/migrate-db"
-    title: "Database Migration Tool"
-    description: "CLI tool for running database migrations"
-    type: "cli-command"
-    version: "v0.1.0"
-    license: "MIT"
+  # Community repositories
+  - name: "vpkg-acme-community"
+    repository: "https://github.com/acme-corp/vpkg-acme-community"
+    meta_url: "https://raw.githubusercontent.com/acme-corp/vpkg-acme-community/main/meta.yaml"
     author: "ACME Corp"
-    repository: "https://github.com/alfariiizi/vpkg-registry/tree/main/packages/acme/migrate-db"
+    verified: false
+
+  # Example single-package repository
+  - name: "awesome-auth-vpkg"
+    repository: "https://github.com/awesome-dev/awesome-auth-vpkg"
+    meta_url: "https://raw.githubusercontent.com/awesome-dev/awesome-auth-vpkg/main/meta.yaml"
+    author: "Awesome Developer"
+    verified: false
 
 tags:
   - name: "full-backend"

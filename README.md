@@ -1,37 +1,93 @@
 # Vandor Package Registry (vpkg-registry)
 
-The official package registry for the Vandor ecosystem, providing reusable components for Go projects using hexagonal architecture.
+The official package registry for the Vandor ecosystem, providing reusable components for Go projects using hexagonal architecture. Similar to shadcn's community registry approach, packages are now stored as remote URLs for better organization and community contributions.
 
-## 🏗️ Architecture
+## 🏗️ Registry Structure
 
-The vpkg system provides two types of packages:
+The registry now uses a **remote URL-based system** with the following structure:
 
-- **`fx-module`** - Library modules that integrate with Uber FX dependency injection
-- **`cli-command`** - Executable CLI tools that can be run via `vandor vpkg exec`
+```
+vpkg-registry/
+├── registry.yaml              # Central registry with remote URLs
+├── vpkg-template/             # Template for creating new packages
+├── vpkg-vandor-official/      # Official Vandor package registry entries
+├── vpkg-acme-community/       # Example community package entries
+└── packages/                  # [DEPRECATED] Old local packages
+```
+
+## 📁 Package Organization
+
+### Template for New Packages
+- **`vpkg-template/`** - Use this template when creating new VPkg packages
+- Contains example `meta.yaml`, Go templates, and documentation
+
+### Official Packages
+- **`vpkg-vandor-official/`** - Registry entries for official Vandor packages
+- Actual packages stored at: https://github.com/alfariiizi/vpkg-vandor-official
+
+### Community Packages
+- **`vpkg-{org}-{category}/`** - Community contributed package registry entries
+- Each organization/community maintains their own remote repositories
+
+## 🌐 Remote URL System
+
+All packages now use remote URLs pointing to their source repositories:
+
+```yaml
+name: vandor/redis-cache
+remote_url: https://raw.githubusercontent.com/alfariiizi/vpkg-vandor-official/main/redis-cache
+repository: https://github.com/alfariiizi/vpkg-vandor-official
+```
 
 ## 📦 Available Packages
 
-### Core Packages (vandor namespace)
+### Official Vandor Packages
 
 #### vandor/redis-cache
 - **Type**: fx-module
 - **Description**: Redis caching adapter using go-redis/v9 with Fx integration
-- **Features**: Configuration management, lifecycle handling, common cache operations
+- **Repository**: https://github.com/alfariiizi/vpkg-vandor-official
 - **Tags**: full-backend, eda, minimal, cache
 
 #### vandor/audit-logger
-- **Type**: fx-module  
+- **Type**: fx-module
 - **Description**: Structured audit logging with context tracking
-- **Features**: Structured logging, context propagation, audit trails
-- **Tags**: full-backend, eda, logging
+- **Repository**: https://github.com/alfariiizi/vpkg-vandor-official
+- **Tags**: full-backend, eda, minimal, logging
 
-### Community Packages (acme namespace)
+### Community Packages
 
 #### acme/migrate-db
 - **Type**: cli-command
 - **Description**: Database migration tool with Atlas integration
-- **Features**: Migration management, status checking, rollback support
-- **Tags**: full-backend, eda, database
+- **Repository**: https://github.com/acme-corp/vpkg-migrate-db
+- **Tags**: full-backend, eda, database, cli
+
+## 🤝 Contributing Packages
+
+### For Community Contributors
+
+1. **Use the Template**
+   - Copy the `vpkg-template/` directory as your starting point
+   - Follow the structure and guidelines in the template README
+
+2. **Create Your Package Repository**
+   - Create a new GitHub repository for your VPkg package
+   - Use the template structure with `meta.yaml` and `templates/`
+   - Ensure your package follows Vandor conventions
+
+3. **Submit Registry Entry**
+   - Create a directory like `vpkg-{your-org}-{category}/`
+   - Add a YAML file describing your package with remote URL
+   - Submit a PR to this registry with your package entry
+
+### Example Community Structure
+```
+vpkg-awesome-community/
+├── awesome-auth.yaml          # Auth package entry
+├── awesome-metrics.yaml       # Metrics package entry
+└── README.md                  # Community info
+```
 
 ## 🚀 Quick Start
 
