@@ -40,4 +40,3 @@ tags:
     description: "Database related functionality"
   - name: "logging"
     description: "Logging and audit functionality"
-
